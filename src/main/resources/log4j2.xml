@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  控制台只打 INFO 及以上，logs/seat-exam.log 打全量（含 OptaPlanner DEBUG）。
+  注意：
+    1) 子 Logger 必须 additivity="false"，否则事件会经 Root 的 AppenderRef 再打一遍（重复日志），
+       且会绕过 AppenderRef 上的 level 限制。
+    2) 用 AppenderRef 的 level 控制台降级，而不是用 appender 上的 <Filters>。
+-->
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <Filters>
-                <LevelRangeFilter minLevel="TRACE" maxLevel="DEBUG" onMatch="DENY" onMismatch="NEUTRAL"/>
-            </Filters>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level [%t] %logger{36} - %msg%n"/>
         </Console>
         <File name="File" fileName="logs/seat-exam.log" append="false">
@@ -12,8 +16,16 @@
         </File>
     </Appenders>
     <Loggers>
-        <!-- OptaPlanner 求解过程输出到 debug 日志 -->
-        <Logger name="org.optaplanner" level="debug"/>
+        <!-- OptaPlanner 全量 DEBUG（含 CH 构造阶段每一步）；
+             唯独 Local Search 逐 step 日志无界刷屏（每秒上万行），单独降到 info -->
+        <Logger name="org.optaplanner" level="debug" additivity="false">
+            <AppenderRef ref="Console" level="INFO"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+        <Logger name="org.optaplanner.core.impl.localsearch.DefaultLocalSearchPhase" level="info" additivity="false">
+            <AppenderRef ref="Console" level="INFO"/>
+            <AppenderRef ref="File"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
