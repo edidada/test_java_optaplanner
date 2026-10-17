@@ -33,3 +33,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+### 随机生成的考生名单（可用 --generate 复现）
+data/students.txt

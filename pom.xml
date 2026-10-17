@@ -17,6 +17,7 @@
     <slf4j.version>2.0.16</slf4j.version>
     <log4j2.version>2.24.1</log4j2.version>
     <jakarta.activation.version>2.1.1</jakarta.activation.version>
+    <poi.version>5.2.1</poi.version>
   </properties>
 
   <!-- 统一收敛版本，解决 slf4j-api / jakarta.activation / log4j2 的多版本冲突 -->
@@ -62,6 +63,18 @@
       <groupId>org.optaplanner</groupId>
       <artifactId>optaplanner-constraint-streams-bavet</artifactId>
       <version>${optaplanner.version}</version>
+    </dependency>
+    <!-- 排座结果导出 Excel；POI 自带 log4j-api 2.17.1，与上面收敛的 2.24.1 冲突，直接排除 -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${poi.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

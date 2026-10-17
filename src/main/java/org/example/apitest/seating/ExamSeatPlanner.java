@@ -43,6 +43,12 @@ public class ExamSeatPlanner {
         return solver.solve(problem);
     }
 
+    /** 控制台预览：某间考场的座位平面图，附带考场信息。 */
+    public static String renderPreview(ExamSeatingService.RoomResult result) {
+        return result.room() + " 座位平面示意（单元格内容为 班级-序号）" + System.lineSeparator()
+                + renderGrid(result.solution());
+    }
+
     /** 把座位表渲染成机房平面图，单元格内容为考生编号（班级-序号）。 */
     public static String renderGrid(ExamSeatSolution solution) {
         Map<Seat, String> occupied = new HashMap<>();
